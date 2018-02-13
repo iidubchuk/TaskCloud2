@@ -102,9 +102,13 @@ public class ListTask extends AppCompatActivity {
 
                 }
                 break;
-            case R.id.btn_exit:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(this, SignInActivity.class));
+//            case R.id.btn_exit:
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(this, SignInActivity.class));
+//                break;
+            case R.id.ListTask_email:
+            case R.id.ListTask_name:
+                startActivity(new Intent(this,ProfileActivity.class));
                 break;
         }
     }

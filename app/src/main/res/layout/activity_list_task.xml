@@ -21,21 +21,23 @@
             android:id="@+id/ListTask_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email" />
+            android:text="Email"
+            android:onClick="onClick"/>
 
 
         <TextView
             android:id="@+id/ListTask_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name" />
+            android:text="Name"
+            android:onClick="onClick"/>
 
-        <Button
-            android:id="@+id/btn_exit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClick"
-            android:text="Exit" />
+        <!--<Button-->
+            <!--android:id="@+id/btn_exit"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:onClick="onClick"-->
+            <!--android:text="Exit" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
