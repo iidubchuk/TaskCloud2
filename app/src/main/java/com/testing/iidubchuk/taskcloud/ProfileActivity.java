@@ -65,6 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(this, SignInActivity.class));
                 break;
+            case R.id.Profile_btn_storage:
+                startActivity(new Intent(this,StorageActivity.class));
+                break;
         }
     }
 }
