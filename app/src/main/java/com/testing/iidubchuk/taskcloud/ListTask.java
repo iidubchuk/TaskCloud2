@@ -1,11 +1,14 @@
 package com.testing.iidubchuk.taskcloud;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -34,6 +37,7 @@ public class ListTask extends AppCompatActivity {
 
 
     List<String> tasks;
+    List<Task> Ctasks;
     FirebaseUser user;
     FirebaseAuth mAuth;
     DatabaseReference mRef;
@@ -59,8 +63,10 @@ public class ListTask extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 LastID = 0;
                 tasks = new ArrayList<>();
+                Ctasks = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     tasks.add(postSnapshot.getValue(String.class));
+                    Ctasks.add(new Task(postSnapshot.getKey(), postSnapshot.getValue(String.class)));
                     LastID = Integer.parseInt(postSnapshot.getKey());
                 }
                 UpdateUI();
@@ -70,18 +76,47 @@ public class ListTask extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        UpdateUI();
+        listViewTask.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(ListTask.this);
+
+                final Task itemTask = Ctasks.get(i);
+                dlg.setMessage("Delete item?");
+                dlg.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(ListTask.this, "no delete", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dlg.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        DeleteTAsk(itemTask);
+                        Toast.makeText(ListTask.this, "delete " + String.valueOf(i), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dlg.show();
+                return true;
+            }
+        });
     }
 
     private void UpdateUI() {
 
-        if (tasks != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
-            listViewTask.setAdapter(adapter);
-        } else {
+        if (Ctasks != null) {
 
-            Log.e("UpdeteUI", "task list == null");
+         ArrayAdapter<Task> adapter = new ArrayAdapter<Task>(this,android.R.layout.simple_list_item_1,Ctasks);
+         listViewTask.setAdapter(adapter);
+
         }
+//        if (tasks != null) {
+//            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
+//            listViewTask.setAdapter(adapter);
+//        } else {
+//
+//            Log.e("UpdeteUI", "task list == null");
+//        }
     }
 
     private String usernameFromEmail(String email) {
@@ -105,14 +140,28 @@ public class ListTask extends AppCompatActivity {
 
             case R.id.ListTask_email:
             case R.id.ListTask_name:
-                startActivity(new Intent(this,ProfileActivity.class));
+                startActivity(new Intent(this, ProfileActivity.class));
                 break;
         }
     }
 
     private void AddTask(String t) {
-        LastID++;
-        mRef.child(String.valueOf(LastID)).setValue(t);
+
+        Task task;
+        if (Ctasks!=null && Ctasks.size()>0) {
+            task = new Task(Ctasks.get(Ctasks.size() - 1).GetIdInt() + 1, t);
+        }
+        else
+            task = new Task(0, t);
+
+        mRef.child(task.Id).setValue(task.TaskName);
+//
+//        LastID++;
+//        mRef.child(String.valueOf(LastID)).setValue(t);
+    }
+
+    private void DeleteTAsk(Task task) {
+        mRef.child(task.Id).removeValue();
     }
 
     private boolean isValidi() {
