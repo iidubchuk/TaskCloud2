@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.testing.iidubchuk.taskcloud.SignInActivity">
+    <include layout="@layout/toolbar"/>
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
         android:src="@mipmap/ic_launcher"
         android:id="@+id/iv_icon"/>
 
@@ -15,9 +16,8 @@
         android:id="@+id/layout_Edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iv_icon"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
+
+        android:orientation="vertical">
 
         <EditText
 
@@ -46,8 +46,6 @@
         android:id="@+id/layout_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_Edit_text"
-        android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <Button
@@ -65,4 +63,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

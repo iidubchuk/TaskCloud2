@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,11 +45,19 @@ public class ListTask extends AppCompatActivity {
     FirebaseAuth mAuth;
     DatabaseReference mRef;
     int LastID;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_list_task);
+
+        toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         TVname = findViewById(R.id.ListTask_name);
         TVemail = findViewById(R.id.ListTask_email);
         listViewTask = findViewById(R.id.ListTask_for_task);
@@ -102,21 +113,36 @@ public class ListTask extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.menu_profile:
+                startActivity(new Intent(this, ProfileActivity.class));
+                break;
+            case R.id.menu_exit:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(this, SignInActivity.class));
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void UpdateUI() {
 
         if (Ctasks != null) {
 
-         ArrayAdapter<Task> adapter = new ArrayAdapter<Task>(this,android.R.layout.simple_list_item_1,Ctasks);
-         listViewTask.setAdapter(adapter);
-
+            ArrayAdapter<Task> adapter = new ArrayAdapter<Task>(this, android.R.layout.simple_list_item_1, Ctasks);
+            listViewTask.setAdapter(adapter);
         }
-//        if (tasks != null) {
-//            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tasks);
-//            listViewTask.setAdapter(adapter);
-//        } else {
-//
-//            Log.e("UpdeteUI", "task list == null");
-//        }
+
     }
 
     private String usernameFromEmail(String email) {
@@ -139,7 +165,7 @@ public class ListTask extends AppCompatActivity {
                 break;
 
             case R.id.ListTask_email:
-            case R.id.ListTask_name:
+            case R.id.ListTask_name: startActivity(new Intent(this, ProfileActivity.class));
                 startActivity(new Intent(this, ProfileActivity.class));
                 break;
         }
@@ -148,10 +174,9 @@ public class ListTask extends AppCompatActivity {
     private void AddTask(String t) {
 
         Task task;
-        if (Ctasks!=null && Ctasks.size()>0) {
+        if (Ctasks != null && Ctasks.size() > 0) {
             task = new Task(Ctasks.get(Ctasks.size() - 1).GetIdInt() + 1, t);
-        }
-        else
+        } else
             task = new Task(0, t);
 
         mRef.child(task.Id).setValue(task.TaskName);

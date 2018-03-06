@@ -13,7 +13,6 @@ public class StorageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storage);
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
     }
 
 }
